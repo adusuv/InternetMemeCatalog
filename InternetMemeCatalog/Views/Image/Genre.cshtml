@@ -1,0 +1,78 @@
+﻿@model IEnumerable<InternetMemeCatalog.Models.Genre>
+
+
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Images Grouped by Genre</title>
+
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.js"></script>
+</head>
+<body>
+    <h2>Images By Genre</h2>
+    <h4>@Html.ActionLink("Click Here To Display All Images", "Index")</h4>
+    <div>
+        @foreach (var item in Model)
+        {
+            <div>
+                <h2>@item.GenreName</h2>
+                <div style="display:inline-block">
+
+                    @foreach (var img in item.Images)
+                    {
+                        <div width="320px" style="display:inline-block">
+                            <img class="imgtag" data-toggle="modal" data-target="#myModal2" data-url="@img.Url" src="@Url.Content(@img.Url)" data-title="@img.Title" longdesc="@img.Description" alt="@img.Title" style="width:270px;height:140px;cursor:pointer" />
+                            <br />
+                            @Html.ActionLink("Delete", "Delete", new { Id = @img.Id, ControllerName = "Genre" }, new { onclick = "return confirm('Are you Sure you want to delete this Image?');" })
+                            &nbsp;&nbsp;<a href="javascript:window.open('mailto:test@hallmark.com?subject='+@img.Url+'&body='+@img.Title);">Send Link</a>
+                            <br />
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+        }
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel2"></h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script>
+
+    $('#myModal2').on('show.bs.modal', function (event) {
+        var img = $(event.relatedTarget);
+        var title = img.data('title');
+        var url = img.data('url').replace('~', '');
+        var modal = $(this)
+        modal.find('.modal-title').text(title)
+        modal.find('.modal-body').html('<img src="' + url + '" height=300 width=300 />');
+    })
+</script>
